@@ -9,8 +9,6 @@
 
 ## 🔗 GitHub Proje Linki
 
-> 📌 Not: Aşağıdaki bağlantıyı kendi GitHub repo linkinle değiştir.
-
 https://github.com/serrpill/Protocol-Buffers-gRPC-Project
 
 ---
