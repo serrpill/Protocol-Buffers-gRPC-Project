@@ -1,176 +1,167 @@
-🎓 Üniversite Kütüphane Sistemi – gRPC Tabanlı
+# 🎓 ÜNİVERSİTE KÜTÜPHANE SİSTEMİ – gRPC TABANLI
 
-Bu proje, Açık Kaynak Kodlu Yazılımlar dersi kapsamında geliştirilmiş bir gRPC tabanlı üniversite kütüphane sistemidir. Uygulama, Protocol Buffers (.proto) kullanılarak tanımlanmış veri yapıları ve servisler aracılığıyla kitap, öğrenci ve ödünç alma işlemlerini yönetir.
+Bu proje, **Açık Kaynak Kodlu Yazılımlar** dersi kapsamında geliştirilmiş bir gRPC tabanlı üniversite kütüphane sistemidir. Uygulama, Protocol Buffers (.proto) kullanılarak tanımlanan veri yapıları üzerinden kitap, öğrenci ve ödünç alma işlemlerini yönetmektedir.
 
-🎯 Projenin Amaçları
-Protobuf ile API tanımı yapmak
+---
 
-gRPC kullanarak sunucu ve istemci oluşturmak
+## 🎯 PROJENİN AMAÇLARI
 
-Kitap, öğrenci ve ödünç işlemleri için CRUD servisleri yazmak
+- **Protobuf** ile API tanımı yapmak  
+- **gRPC** ile sunucu ve istemci uygulamaları geliştirmek  
+- Kitap, öğrenci ve ödünç işlemleri için **CRUD servisleri** oluşturmak  
+- `grpcurl` aracı ile komut satırından testler gerçekleştirmek  
 
-grpcurl aracı ile test işlemlerini komut satırından gerçekleştirmek
+---
 
-📦 Kullanılan Teknolojiler
-Python 3
+## 🧰 KULLANILAN TEKNOLOJİLER
 
-grpcio
+- Python 3  
+- grpcio  
+- grpcio-tools  
+- grpcio-reflection  
+- grpcurl  
 
-grpcio-tools
+---
 
-grpcio-reflection
+## 📚 VARLIKLAR VE ALANLARI
 
-grpcurl (komut satırı testi için)
+### 📘 1. Books
 
-📚 Varlıklar ve Alanları
-books
+- **id** → string (UUID formatında)  
+- **title** → string  
+- **author** → string  
+- **isbn** → string (ISBN-13 formatında)  
+- **publisher** → string  
+- **pageCount** → integer  
+- **stock** → integer  
 
-id (string, UUID formatında)
+### 👤 2. Students
 
-title (string)
+- **id** → string (UUID formatında)  
+- **name** → string  
+- **studentNumber** → string  
+- **email** → string (geçerli e-posta)  
+- **isActive** → boolean  
 
-author (string)
+### 🔁 3. Loans
 
-isbn (string, ISBN-13 formatında)
+- **id** → string (UUID formatında)  
+- **studentId** → string  
+- **bookId** → string  
+- **loanDate** → string (tarih formatında)  
+- **returnDate** → string (nullable)  
+- **status** → enum (`ongoing`, `returned`, `late`)  
 
-publisher (string)
+---
 
-pageCount (integer)
+## 🔧 SERVİSLER VE METOTLAR
 
-stock (integer)
+### 📗 BookService
 
-students
+- **ListBooks**  
+- **GetBook**  
+- **AddBook**  
+- **UpdateBook**  
+- **DeleteBook**  
 
-id (string, UUID formatında)
+### 🧑‍🎓 StudentService
 
-name (string)
+- **ListStudents**  
+- **GetStudent**  
+- **AddStudent**  
+- **UpdateStudent**  
+- **DeleteStudent**  
 
-studentNumber (string)
+### 🔄 LoanService
 
-email (string, e-posta formatında)
+- **ListLoans**  
+- **GetLoan**  
+- **BorrowBook**  
+- **ReturnBook**  
 
-isActive (boolean)
+---
 
-loans
+## 📁 PROJE KLASÖR YAPISI
 
-id (string, UUID formatında)
+```
+/ (kök dizin)
+├── university.proto             → Protobuf tanımı
+├── server.py                   → gRPC sunucu uygulaması
+├── client.py                   → gRPC istemci uygulaması
+├── grpcurl-tests.md            → grpcurl test komutları ve çıktılar
+├── DELIVERY.md                 → Teslim dosyası
+├── university_pb2.py           → (protoc ile otomatik üretilir, git'e eklenmez)
+├── university_pb2_grpc.py      → (protoc ile otomatik üretilir, git'e eklenmez)
+```
 
-studentId (string)
+---
 
-bookId (string)
+## ✅ `.PROTO` DOSYASI ÖZETİ
 
-loanDate (string, tarih formatında)
+- `syntax = "proto3"`  
+- `package university`  
+- 3 adet servis tanımı: **BookService**, **StudentService**, **LoanService**  
+- Her varlık için CRUD ve özel işlemler tanımlandı  
+- Enum: **LoanStatus**  
+- Tüm metotlar İngilizce ve okunabilir biçimde yazılmıştır  
 
-returnDate (string, tarih formatında, nullable olabilir)
+---
 
-status (enum: "ongoing", "returned", "late")
+## ⚙️ UYGULAMAYI ÇALIŞTIRMA
 
-🔧 Zorunlu Servis Metotları
-Aşağıdaki işlevler .proto dosyasında servis olarak tanımlanmıştır:
+**1. Bağımlılıkları kur:**
 
-BookService
-
-Listeleme
-
-Tekil görüntüleme
-
-Ekleme
-
-Güncelleme
-
-Silme
-
-StudentService
-
-Listeleme
-
-Tekil görüntüleme
-
-Ekleme
-
-Güncelleme
-
-Silme
-
-LoanService
-
-Listeleme
-
-Tekil görüntüleme
-
-Ödünç alma
-
-Kitap iade etme
-
-📁 Proje Klasör Yapısı
-Kök dizin:
-
-university.proto → Protobuf tanımı (.proto dosyası)
-
-university_pb2.py → Protoc ile otomatik üretilir (sunulmamalı)
-
-university_pb2_grpc.py → Protoc ile otomatik üretilir (sunulmamalı)
-
-server.py → gRPC sunucu uygulaması
-
-client.py → gRPC istemci uygulaması
-
-grpcurl-tests.md → grpcurl ile yapılan test komutları ve çıktıları
-
-DELIVERY.md → Teslim dosyası (Google Classroom için)
-
-✅ .proto Dosyasında Bulunması Gerekenler
-syntax, package, option tanımları bulunur
-
-3 adet service tanımı: BookService, StudentService, LoanService
-
-Her varlık için CRUD ve işlevsel rpc tanımları yapılmıştır
-
-Request ve response mesajları ayrı message olarak tanımlanmıştır
-
-loans varlığında enum (LoanStatus) tanımı yapılmıştır
-
-Kod stili okunabilir, İngilizce isimlendirme tercih edilmiştir
-
-⚙️ Projeyi Çalıştırmak İçin
-Gerekli Python kütüphanelerini yükleyin:
-
+```
 pip install grpcio grpcio-tools grpcio-reflection
+```
 
-.proto dosyasını derleyin:
+**2. Stub dosyalarını üret (.proto'dan):**
 
+```
 python -m grpc_tools.protoc -I. --python_out=. --grpc_python_out=. university.proto
+```
 
-Sunucuyu başlatın:
+**3. Sunucuyu başlat:**
 
+```
 python server.py
+```
 
-İstemciyi çalıştırın:
+**4. İstemciyi çalıştır:**
 
+```
 python client.py
+```
 
-🧪 grpcurl ile Test
-Reflection desteği varsa servisleri listelemek için:
+---
 
+## 🧪 `GRPCURL` İLE TEST
+
+### Reflection ile servisleri listele:
+```
 grpcurl -plaintext localhost:50051 list
+```
 
-Eğer yoksa, proto dosyası ile doğrudan komut kullanılabilir:
+### Reflection desteklenmiyorsa `.proto` ile test:
+```
+grpcurl -plaintext -proto university.proto -d "{ \"title\": \"Clean Code\", \"author\": \"Robert C. Martin\", \"isbn\": \"9780132350884\", \"publisher\": \"Prentice Hall\", \"pageCount\": 464, \"stock\": 10 }" localhost:50051 university.BookService/AddBook
+```
 
-grpcurl -plaintext -proto university.proto -d "{ "title": "Clean Code", "author": "Robert C. Martin", "isbn": "9780132350884", "publisher": "Prentice Hall", "pageCount": 464, "stock": 10 }" localhost:50051 university.BookService/AddBook
+> Tüm test çıktıları ve komutlar `grpcurl-tests.md` dosyasında belgelenmiştir.
 
-Tüm test komutları ve örnek çıktılar grpcurl-tests.md dosyasında belgelenmiştir.
+---
 
-📌 Notlar ve Gereksinimler
-Sunucu uygulaması gRPC'ye uygun şekilde, mock veri ile çalışmaktadır
+## 📌 NOTLAR
 
-İstemci uygulaması servis metotlarını başarıyla çağırmaktadır
+- Sunucu uygulaması **mock verilerle** çalışır  
+- grpcurl testleri gerçekleştirilmiştir  
+- `university_pb2.py` ve `university_pb2_grpc.py` dosyaları **.gitignore** ile hariç tutulmalıdır  
+- Proje yönergeye %100 uygundur  
 
-grpcurl ile test yapılmıştır
+---
 
-Stub dosyaları (_pb2.py) repoya eklenmemeli, build sırasında oluşturulmalıdır
+## 👩‍💻 GELİŞTİRİCİ
 
-👤 Geliştirici
-Ad: Serpil
-Ders: Açık Kaynak Kodlu Yazılımlar
-Proje: Protocol Buffers & gRPC Servis Geliştirme
-
+**Ad Soyad:** Serpil Çobanlar 
+**Ders:** Açık Kaynak Kodlu Yazılımlar  
+**Proje:** Protocol Buffers & gRPC ile Üniversite Kütüphane Sistemi
